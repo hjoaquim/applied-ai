@@ -1,2 +1,2 @@
 # applied-ai
-Applied AI, a subject from the Master in AI and Data Science at University of Évora
+Applied AI, a subject from the Master's degree in AI and Data Science at the University of Évora.
