@@ -6,10 +6,12 @@ authors = ["hjoaquim <h.joaquim@campus.fct.unl.pt>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.9,<3.12"
 pandas = "^2.1.4"
 matplotlib = "^3.8.2"
 seaborn = "^0.13.1"
+openbb-devtools = "^1.1.0"
+scipy = "^1.11.4"
 
 
 [build-system]
