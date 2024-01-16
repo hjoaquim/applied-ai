@@ -1,0 +1,335 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage[left=3cm]{geometry}
+\title{"Vinho Verde" Analysis}
+\author{Henrique Joaquim}
+\date{January 2024}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+\subsection{Project Overview}
+Embarking on an analytical journey, this project focuses on Portuguese
+"Vinho Verde" wines. It aims to uncover the subtleties within the datasets of red and white variants through a machine learning lens. The primary goals are to predict the nuanced aspects of wine quality and alcohol content and to accurately classify the wines by type.
+
+\subsection{Analytical Objectives}
+The endeavor is structured into three tasks: two classifications and one regression. Each task is an opportunity to juxtapose two distinct algorithms, evaluating their efficacy in modeling the complex relationships present in the data.
+
+\subsection{Report Outline}
+This report presents an in-depth analysis of the datasets, discussing data characteristics, the alcohol content in wine, the classification of wine types, and the prediction of their quality. It encapsulates the methodology, results, and insights from a series of machine learning models, offering a comparative lens through which the performance of these models is assessed and discussed.
+
+\subsection{Reproducibility}
+
+Ensuring the integrity and reproducibility of research findings is of paramount importance. To facilitate this, all methodologies, source code, and datasets employed within this analysis are openly available. These resources can be accessed at our GitHub repository:
+
+\begin{itemize}
+    \item Repository: \href{https://github.com/hjoaquim/applied-ai/tree/main/wine-analysis}{hjoaquim/wine-analysis}
+    \item Reproduction steps: \href{https://github.com/hjoaquim/applied-ai/blob/main/wine-analysis/README.md}{README}
+\end{itemize}
+
+Interested parties are encouraged to replicate the study by following the detailed steps provided in the README file of the repository. This ensures transparency and allows for the validation of the results presented herein.
+
+
+\section{Methodology} \label{methodology}
+
+The methodology adopted for this project employs a structured knowledge discovery process, which is also depicted in \ref{appendix:methodology}:
+
+\begin{enumerate}
+\item \textbf{Exploratory Analysis:} Commencing with a thorough exploratory analysis to gauge data characteristics including statistical summaries and correlations.
+\item \textbf{Understanding the Data:} This phase involves a deeper dive into the dataset to uncover insights related to missing values and univariate distributions.
+\item \textbf{Data Transformation:} Key preprocessing steps such as handling missing values, outliers, normalization, standardization, and addressing skewed data are undertaken to refine the dataset.
+\item \textbf{Feature Engineering:} The creation and selection of relevant features are executed to bolster the predictive models.
+\item \textbf{Data Splitting:} The dataset is divided into training and testing sets to validate the performance of the models.
+\item \textbf{Baseline Modeling:} A simple model is constructed to serve as a baseline for comparison.
+\item \textbf{Model Selection and Building:} Appropriate models for the tasks are selected, and built, and their predictions are evaluated.
+\item \textbf{Finalizing Models:} Upon satisfactory results, the iterative process concludes, and the final models are 'pickled' for reproducibility.
+\end{enumerate}
+
+
+
+\section{Exploratory Data Analysis}
+\subsection{Overview}
+An in-depth exploratory analysis was conducted, revealing insights about the chemical properties of wines and their distributions.
+
+The code used for the exploratory data analysis can be found here: \href{https://github.com/hjoaquim/applied-ai/blob/main/wine-analysis/exploratory-analysis.ipynb}{exploratory-analysis}.
+
+\subsection{Analysis}
+
+After loading the dataset and getting a sense of what the dataset looks like, we started performing some actual analysis, namely:
+
+\begin{enumerate}
+    \item Dataset shape
+        \begin{enumerate}
+            \item red wine: 1439 rows and 12 columns;
+            \item white wine: 4408 rows and 12 columns.
+        \end{enumerate}
+    \item Descriptive statistics
+        \begin{enumerate}
+            \item measures: count, mean, std, min and max.
+            \item quartiles: 25%, 50% and 75%
+        \end{enumerate}
+    \item Data profiling
+        \begin{enumerate}
+            \item float64: fixed-acidity, volatile-acidity, citric-acid, residual-sugar, chlorides, free-sulfur-dioxide, density, pH, sulphates, alcohol
+            \item int64: quality
+        \end{enumerate}
+    \item Missing values
+        \begin{enumerate}
+            \item red wine dataset: 2 rows with "residual sugar" column set to `NaN`.
+            \item red wine dataset: 1 row with "residual sugar" column set to `NaN`.
+        \end{enumerate}
+    \item Univariate analysis - for an in-depth interpretation please refer to \href{https://github.com/hjoaquim/applied-ai/blob/main/wine-analysis/exploratory-analysis.ipynb}{Interpreting the Histograms} section, also, \ref{appendix:histograms}
+        \begin{enumerate}
+            \item \textit{Prevalent Right Skewness:} A notable right skew is observed in variables including fixed acidity, volatile acidity, citric acid, residual sugar, chlorides, both forms of sulfur dioxide, and sulfates across both red and white wine datasets. This skewness pattern indicates a predominance of lower concentration levels for these chemical components, with a relatively smaller proportion of wines exhibiting higher concentrations.
+
+            \item \textit{Density Distribution:} The density of wines, both red and white, demonstrates a nearly normal distribution. This uniformity suggests a consistency in wine production methods that results in similar density across different wines.
+
+            \item \textit{Acidity Levels (pH):} The pH values of both wine types are distributed in an approximately normal fashion, clustering around a central average value, which is indicative of a standard level of acidity in wines.
+
+            \item \textit{Alcohol Content Variation:} A distinction in alcohol content distribution is observed between the two datasets. The white wine data shows a more pronounced right skew, implying a general lower alcohol content, whereas the red wine data exhibits a bimodal distribution, indicating a more diverse alcohol content range.
+
+            \item \textit{Quality Distribution:} The quality metric for both wine types does not follow a normal distribution. Instead, there is a clustering around median quality levels, suggesting that most wines fall into the category of average quality.
+
+            \item These patterns point to underlying similarities in wine compositions, likely reflective of industry norms, winemaking practices, or consumer preferences that influence the production and perception of wine quality.
+        \end{enumerate}
+
+    \item Correlations - for an in-depth interpretation please refer to \href{https://github.com/hjoaquim/applied-ai/blob/main/wine-analysis/exploratory-analysis.ipynb}{Interpret the heatmap} section, also, \ref{appendix:heatmaps}
+        \begin{enumerate}
+            \item \textit{Red Wine Correlations}:
+            \begin{enumerate}
+                \item
+            \end{enumerate}
+                \item \textbf{Fixed Acidity}: Exhibits a substantial positive correlation with citric acid, and a strong inverse relationship with pH, reflecting typical acid behavior.
+                \item \textbf{Volatile Acidity}: Negatively correlates with citric acid and quality, indicating its impact on lowering wine quality.
+                \item \textbf{Citric Acid and Sulphates}: Show mutual positive correlation, suggesting a shared role in wine quality enhancement.
+                \item \textbf{Alcohol}: Stands out with a positive correlation with quality, underlining its significance in higher quality wines.
+            \end{enumerate}
+            \item \textit{White Wine Correlations}:
+            \begin{enumerate}
+                \item \textbf{Residual Sugar and Density}: Strongly correlated, highlighting sugar's effect on increasing density.
+                \item \textbf{Sulfur Dioxide Forms}: Positively correlated with each other and moderately with residual sugar, suggesting their preservation role in sweeter wines.
+                \item \textbf{Alcohol}: Displays a positive correlation with quality, similar to red wine, emphasizing its role in perceived quality.
+            \end{enumerate}
+            \begin{itemize}
+                \item These correlation patterns offer insights into the chemical dynamics of winemaking and quality perception, reflecting both shared and distinct characteristics across wine types. They underscore the complex interplay of various components influencing wine quality.
+            \end{itemize}
+
+    \item Outliers - for an in-depth interpretation please refer to \href{https://github.com/hjoaquim/applied-ai/blob/main/wine-analysis/exploratory-analysis.ipynb}{Outliers} section
+        \begin{enumerate}
+            \item Outlier analysis in both red and white wine datasets using the IQR method reveals distinct patterns. In red wine, notable outliers are found in residual sugar, chlorides, and total sulfur dioxide, suggesting variability in these elements. In white wine, volatile acidity, citric acid, and chlorides stand out with a higher number of outliers, indicating greater diversity in their composition. Both datasets show certain variables with fewer outliers, implying more uniform characteristics in those areas. These findings underscore the importance of considering outliers in analyzing wine properties, as they can significantly influence statistical interpretations and model predictions.
+        \end{enumerate}
+\end{enumerate}
+
+Considering this analysis some actions might be used during the workflow outlined in \ref{methodology}, namely:
+\begin{enumerate}
+    \item remove missing values
+    \item addressing skewness, possible transformations are:
+        \begin{enumerate}
+            \item logarithmic
+            \item square-root
+            \item Box-Cox
+        \end{enumerate}
+    \item removing outliers
+    \item feature selection
+        \begin{enumerate}
+            \item low correlation with the dependant variable: remove
+            \item highly correlated features: remove one, combine, principal component analysis (PCA)
+        \end{enumerate}
+\end{enumerate}
+
+\section{Task 1: Predicting Alcohol Content in Wine}
+    \subsection{Objective}
+    The primary goal was to predict the alcohol content in wines, utilizing a dataset that merged both red and white wine data.
+
+    \subsection{Methodology}
+    The process began with loading, merging, and cleaning the datasets to ensure data quality. Subsequent steps involved implementing various regression models:
+    \begin{itemize}
+        \item Linear Regression - baseline modeling
+        \item Random Forest Regressor
+        \item Support Vector Regressor (SVR)
+    \end{itemize}
+
+    \subsection{Results and Evaluation}
+    The models were evaluated on their performance, measured in terms of Mean Squared Error (MSE) and R-squared (R²). The findings were as follows:
+    \begin{itemize}
+        \item Linear Regression and Random Forest models exhibited similar performance levels.
+        \item The SVR model differed notably in its MSE and R² scores.
+    \end{itemize}
+
+    \setlength{\tabcolsep}{1pt}
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{lcc}
+        \hline
+        \textbf{Model}           & \textbf{MSE} & \textbf{R2} \\
+        \hline
+        Linear Regression        & 4.27         & 0.23        \\
+        Random Forest            & 4.12         & 0.26        \\
+        Support Vector Regressor & 5.21         & 0.06        \\
+        \hline
+        \end{tabular}
+        \caption{Performance comparison of regression models}
+        \label{tab:regression_results}
+    \end{table}
+
+    \subsection{Conclusion}
+    \textbf{Linear Regression}: Shows a moderate performance with an MSE of 4.27 and an R2 of 0.23. This suggests that while the model captures some variance in the data, its predictive power is limited.
+
+    \textbf{Random Forest}: Exhibits a slightly better performance compared to Linear Regression, with a lower MSE of 4.12 and a higher R2 of 0.26. This improvement indicates that the ensemble method is more effective in capturing the complexities of the dataset.
+
+    \textbf{Support Vector Regressor (SVR)}: Has the highest MSE at 5.21 and the lowest R2 at 0.06 among the models tested. This suggests that SVR is the least effective for this particular dataset, possibly due to its complexity or the nature of the data.
+
+In summary, the Random Forest model appears to be the most effective in predicting alcohol content in the given dataset, followed by Linear Regression, with SVR being the least effective. These results highlight the importance of model selection and the need to tailor the choice of algorithm to the specific characteristics of the dataset at hand.
+
+\section{Task 2: Wine Color Classification}
+
+    \subsection{Objective}
+    Classifying wines into red and white categories using two distinct classification algorithms.
+
+    \subsection{Methodology}
+    After preprocessing the datasets, which included handling missing values and defining a 'color' attribute, the data was split for training and testing purposes. The algorithms selected for this task were:
+    \begin{itemize}
+        \item Logistic Regression
+        \item Gradient Boosting Classifier
+    \end{itemize}
+
+    \subsection{Results and Evaluation}
+    The models' performance was assessed based on accuracy, precision, recall, and F1-score. The results are summarized in the table below:
+
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{lcccc}
+        \hline
+        \textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
+        \hline
+        Dummy Classifier     & 74.00\% & 0.74 (white) / 0.00 (red) & 1.00 (white) / 0.00 (red) & 0.85 (white) / 0.00 (red) \\
+        Logistic Regression  & 98.12\% & 0.98 (white) / 0.94 (red) & 0.98 (white) / 0.99 (red) & 0.99 (white) / 0.96 (red) \\
+        Gradient Boosting    & 99.06\% & 0.99 (white) / 0.99 (red) & 1.00 (white) / 0.97 (red) & 0.99 (white) / 0.98 (red) \\
+        \hline
+        \end{tabular}
+        \caption{Performance Comparison of Classification Models on Wine Dataset}
+        \label{tab:model_performance}
+    \end{table}
+
+    \subsection{Conclusion}
+    The classification models demonstrated significant variance in performance. The Dummy Classifier, serving as a baseline, showed limited effectiveness with 74\% accuracy. In contrast, the Logistic Regression model markedly improved the predictive capability, achieving 98.12\% accuracy. The most notable performance was from the Gradient Boosting model, which attained an exceptional accuracy of 99.06\%, illustrating its superior ability to differentiate between red and white wines. This analysis underscores the importance of choosing advanced machine-learning techniques for more accurate and reliable classifications in wine datasets.
+
+     Confusion matrices for the models are also provided in \ref{appendix:task2-confusion-matrices} to illustrate the detailed classification performance of each model.
+
+
+\section{Task 3: Wine Quality Classification}
+
+    \subsection{Objective}
+    The objective of Task 3 was to classify the quality of wines, leveraging a combined dataset of red and white wines and applying two distinct machine learning algorithms.
+
+    \subsection{Methodology}
+    Two algorithms were employed for this classification task:
+    \begin{itemize}
+        \item A baseline model using a Dummy Classifier, which predicts the most frequent class.
+        \item An advanced model using Support Vector Machine (SVM) Classifier for a more nuanced classification.
+        \item A Neural Network was also developed to predict wine quality, using a remapped label system suitable for the \textit{CrossEntropyLoss} function in PyTorch.
+    \end{itemize}
+    The data was preprocessed, scaled, and split into training and test sets before model application.
+
+    \subsection{Results}
+    The models' performances were assessed using accuracy metrics and confusion matrices.
+    \begin{itemize}
+        \item The Dummy Classifier served as a baseline with an accuracy of approximately 43.03\%.
+        \item The SVM Classifier showed an improved accuracy of 55.17\%.
+        \item The Neural Network achieved an accuracy of 50.73\%.
+    \end{itemize}
+    Confusion matrices for both the Dummy Classifier and SVM Classifier are provided in \ref{appendix:task3-confusion-matrices} to illustrate the detailed classification performance of each model.
+
+    \subsection{Conclusion}
+    The analysis concluded that the SVM Classifier outperformed both the baseline Dummy Classifier and the Neural Network, indicating a better fit for the quality classification task. However, there remains room for improvement, as indicated by the moderate accuracy level. Further optimization, possibly through model tuning or additional feature engineering, could enhance the performance of the classifiers for this task.
+
+\clearpage
+\appendix
+\section{\\Methodology - Knowledge Discovery Process}
+\label{appendix:methodology}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{images/methodology.png}
+\caption{Methodology}
+\label{fig:methodology}
+\end{figure}
+
+
+\section{\\Univariate Analysis - Histograms}
+\label{appendix:histograms}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=1\linewidth]{exploratory-analysis_files/exploratory-analysis_10_1.png}
+        \caption{Red wine features histogram}
+        \label{fig:red-histogram}
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=1\linewidth]{exploratory-analysis_files/exploratory-analysis_10_3.png}
+        \caption{White wine features histogram}
+        \label{fig:white-histogram}
+    \end{figure}
+
+
+\section{\\Correlations - Heat-maps}
+\label{appendix:heatmaps}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=1\linewidth]{exploratory-analysis_files/exploratory-analysis_13_2.png}
+        \caption{Red wine correlation heat-map}
+        \label{fig:red-heatmap}
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=1\linewidth]{exploratory-analysis_files/exploratory-analysis_13_5.png}
+        \caption{White wine correlation heat-map}
+        \label{fig:white-heatmap}
+    \end{figure}
+
+\section{\\Task 2 - Confusion matrices}
+\label{appendix:task2-confusion-matrices}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{task2/task_2_5_1.png}
+    \caption{Confusion Matrix for the Dummy Classifier}
+    \label{fig:dummy_confusion_matrix}
+    \end{figure}
+
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{task2/task_2_6_1.png}
+    \caption{Confusion Matrix for the Logistic Regression}
+    \label{fig:svm_confusion_matrix}
+    \end{figure}
+
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{task2/task_2_6_2.png}
+    \caption{Confusion Matrix for the Gradient Boosting}
+    \label{fig:svm_confusion_matrix}
+    \end{figure}
+
+\section{\\Task 3 - Confusion matrices}
+\label{appendix:task3-confusion-matrices}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{task3/task_3_4_1.png}
+    \caption{Confusion Matrix for the Dummy Classifier}
+    \label{fig:dummy_confusion_matrix}
+    \end{figure}
+
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{task3/task_3_5_1.png}
+    \caption{Confusion Matrix for the SVM Classifier}
+    \label{fig:svm_confusion_matrix}
+    \end{figure}
+
+\end{document}
