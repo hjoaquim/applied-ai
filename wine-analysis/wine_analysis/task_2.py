@@ -138,5 +138,5 @@ plt.show()
 
 # In[7]:
 
-joblib.dump(log_reg, "models/log_reg.pkl")
-joblib.dump(gb_clf, "models/gb_clf.pkl")
+joblib.dump(log_reg, "models/task_2_log_reg.pkl")
+joblib.dump(gb_clf, "models/task_2_gb_clf.pkl")

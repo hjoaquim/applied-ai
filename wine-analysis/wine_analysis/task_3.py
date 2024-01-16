@@ -178,5 +178,5 @@ print(f"Accuracy: {accuracy:.4f}")
 
 # In[8]:
 
-joblib.dump(nn_model, "models/nn.pkl")
-joblib.dump(svm_clf, "models/svr_reg.pkl")
+joblib.dump(nn_model, "models/task_3_nn.pkl")
+joblib.dump(svm_clf, "models/task_3_svr_reg.pkl")

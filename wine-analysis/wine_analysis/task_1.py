@@ -115,5 +115,5 @@ print(performace_template.format(model="SVR", mse=svr_mse, r2=svr_r2))
 
 # In[9]:
 
-joblib.dump(lin_reg, "models/lin_reg.pkl")
-joblib.dump(svr_reg, "models/svr_reg.pkl")
+joblib.dump(rf_reg, "models/task_1_rf_reg.pkl")
+joblib.dump(svr_reg, "models/task_1_svr_reg.pkl")
